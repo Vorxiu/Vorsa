@@ -1,27 +1,24 @@
 package org.vorxiu;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 
 public class DB {
-    public static void connect() {
-        String url = "jdbc:oracle:thin:@localhost:1522/FREEPDB1";
-        String user = "system";
-        String pass = "vorsa123";
+    private static final String URL = "jdbc:oracle:thin:@localhost:1522/FREEPDB1";
+    private static final String USER = "system";
+    private static final String PASS = "vorsa123";
 
-        try (Connection conn = DriverManager.getConnection(url, user, pass)) {
-            System.out.println("Connected to Oracle!");
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASS);
+    }
 
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM USER_TABLES");
-
-            while (rs.next()) {
-                System.out.println(rs.getString(1));
-            }
-
-        } catch (Exception e) {
+    public static boolean testConnection() {
+        try (Connection conn = getConnection()) {
+            return true;
+        } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }
