@@ -1,1 +1,2 @@
-# Simple Banking Java App using Swings and oracle db
+# Vorsa
+## Simple Banking Java App using Swing and oracle db
