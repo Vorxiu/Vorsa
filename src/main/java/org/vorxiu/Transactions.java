@@ -25,7 +25,7 @@ public class Transactions extends JPanel {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
         JLabel titleLabel = new JLabel("Transactions");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
+        titleLabel.setFont(StyleUtils.HEADER_FONT);
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
         // Icons on top right (Night mode, Notification) - Placeholders
@@ -73,10 +73,10 @@ public class Transactions extends JPanel {
         table.setRowHeight(40);
         table.setShowVerticalLines(false);
         table.setIntercellSpacing(new Dimension(0, 0));
-        table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
+        table.getTableHeader().setFont(StyleUtils.LABEL_FONT);
         table.getTableHeader().setBackground(Color.WHITE);
         table.getTableHeader().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
-        table.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        table.setFont(StyleUtils.NORMAL_FONT);
 
         // Custom renderer for padding
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();

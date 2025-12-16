@@ -25,7 +25,7 @@ public class Dashboard extends JPanel {
     public Dashboard(Main main) {
         this.main = main;
         setLayout(new BorderLayout());
-        setBackground(new Color(245, 245, 245)); // Light gray background
+        setBackground(StyleUtils.BACKGROUND_COLOR);
 
         // Sidebar
         add(createSidebar(), BorderLayout.WEST);
@@ -51,16 +51,30 @@ public class Dashboard extends JPanel {
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setBackground(new Color(245, 245, 245));
+        sidebar.setBackground(StyleUtils.BACKGROUND_COLOR);
         sidebar.setPreferredSize(new Dimension(200, 0));
         sidebar.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         // Profile
-        JLabel profileIcon = new JLabel(new FlatSVGIcon("avatar.svg"));
+        JLabel profileIcon = new JLabel();
+        try {
+            java.net.URL imgUrl = getClass().getResource("/avatar.png");
+            if (imgUrl != null) {
+                ImageIcon originalIcon = new ImageIcon(imgUrl);
+                Image image = originalIcon.getImage();
+                Image newimg = image.getScaledInstance(150, 150, java.awt.Image.SCALE_SMOOTH);
+                profileIcon.setIcon(new ImageIcon(newimg));
+            } else {
+                // Fallback if image not found
+                profileIcon.setText("No Image");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         profileIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         nameLabel = new JLabel("Name");
-        nameLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        nameLabel.setFont(StyleUtils.LABEL_FONT);
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         idLabel = new JLabel("ID");
@@ -84,7 +98,7 @@ public class Dashboard extends JPanel {
                 icon.setColorFilter(new FlatSVGIcon.ColorFilter(color -> new Color(0x333333)));
                 label.setIcon(icon);
             }
-            label.setFont(new Font("SansSerif", Font.PLAIN, 14));
+            label.setFont(StyleUtils.NORMAL_FONT);
             label.setBorder(new EmptyBorder(10, 0, 10, 0));
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

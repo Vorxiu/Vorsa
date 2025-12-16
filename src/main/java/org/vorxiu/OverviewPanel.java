@@ -26,82 +26,74 @@ public class OverviewPanel extends JPanel {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        JPanel contentPanel = new JPanel(new GridBagLayout());
+        JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setOpaque(false);
         contentPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        // Center Column
+        contentPanel.add(createCenterPanel(), BorderLayout.CENTER);
 
-        // Center Column (Balance, Savings, Stats, History)
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.7;
-        gbc.weighty = 1.0;
-        contentPanel.add(createCenterPanel(), gbc);
-
-        // Right Column (Card, Limits)
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weightx = 0.3;
-        gbc.weighty = 1.0;
-        contentPanel.add(createRightPanel(), gbc);
+        // Right Column
+        JPanel rightContainer = new JPanel(new BorderLayout());
+        rightContainer.setOpaque(false);
+        rightContainer.setBorder(new EmptyBorder(0, 20, 0, 0));
+        rightContainer.add(createRightPanel(), BorderLayout.CENTER);
+        contentPanel.add(rightContainer, BorderLayout.EAST);
 
         add(contentPanel, BorderLayout.CENTER);
     }
 
     private JPanel createCenterPanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.BOTH;
 
         // Header
         JLabel welcomeLabel = new JLabel("Welcome Back!");
-        welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.weighty = 0.0;
-        panel.add(welcomeLabel, gbc);
+        welcomeLabel.setFont(StyleUtils.HEADER_FONT);
+        welcomeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(welcomeLabel);
+        panel.add(Box.createVerticalStrut(20));
+
+        // Balance & Savings Row
+        JPanel row = new JPanel(new GridLayout(1, 2, 20, 0));
+        row.setOpaque(false);
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+        row.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+        row.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Balance Card
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0.5;
-        gbc.weighty = 0.2;
-
         JPanel balanceCard = new JPanel(new BorderLayout());
         balanceCard.setBackground(Color.WHITE);
         balanceCard.setBorder(new EmptyBorder(20, 20, 20, 20));
         JLabel balanceTitle = new JLabel("Balance");
-        balanceTitle.setFont(new Font("SansSerif", Font.BOLD, 24));
+        balanceTitle.setFont(StyleUtils.HEADER_FONT);
         balanceTitle.setHorizontalAlignment(SwingConstants.CENTER);
         balanceLabel = new JLabel("0.00 $");
-        balanceLabel.setFont(new Font("SansSerif", Font.PLAIN, 32));
+        balanceLabel.setFont(new Font("Inter", Font.PLAIN, 32));
         balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
         balanceCard.add(balanceTitle, BorderLayout.NORTH);
         balanceCard.add(balanceLabel, BorderLayout.CENTER);
 
-        panel.add(balanceCard, gbc);
+        row.add(balanceCard);
+        row.add(createSavingsCard());
 
-        // Savings Card
-        gbc.gridx = 1;
-        panel.add(createSavingsCard(), gbc);
+        panel.add(row);
+        panel.add(Box.createVerticalStrut(20));
 
         // Stats Chart
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.weighty = 0.4;
-        panel.add(createStatsCard(), gbc);
+        JPanel statsCard = createStatsCard();
+        statsCard.setAlignmentX(Component.LEFT_ALIGNMENT);
+        statsCard.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
+        statsCard.setPreferredSize(new Dimension(Integer.MAX_VALUE, 300));
+        panel.add(statsCard);
+        panel.add(Box.createVerticalStrut(20));
 
         // History
-        gbc.gridy = 3;
-        gbc.weighty = 0.4;
-        panel.add(createHistoryCard(), gbc);
+        JPanel historyCard = createHistoryCard();
+        historyCard.setAlignmentX(Component.LEFT_ALIGNMENT);
+        historyCard.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        panel.add(historyCard);
 
         return panel;
     }
@@ -112,11 +104,11 @@ public class OverviewPanel extends JPanel {
         card.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         JLabel titleLabel = new JLabel("Savings");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        titleLabel.setFont(StyleUtils.HEADER_FONT);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         savingsLabel = new JLabel("0 / 1000");
-        savingsLabel.setFont(new Font("SansSerif", Font.PLAIN, 28));
+        savingsLabel.setFont(new Font("Inter", Font.PLAIN, 28));
         savingsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         savingsBar = new JProgressBar(0, 1000);
@@ -136,7 +128,7 @@ public class OverviewPanel extends JPanel {
         card.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         JLabel title = new JLabel("STATS");
-        title.setFont(new Font("SansSerif", Font.BOLD, 12));
+        title.setFont(StyleUtils.LABEL_FONT);
         card.add(title, BorderLayout.NORTH);
 
         chartPanel = new ChartPanel();
@@ -255,58 +247,47 @@ public class OverviewPanel extends JPanel {
         };
         creditCard.setPreferredSize(new Dimension(300, 180)); // Standard card aspect ratio
         creditCard.setMaximumSize(new Dimension(320, 200));
-        creditCard.setLayout(new GridBagLayout());
+        creditCard.setLayout(new BorderLayout());
         creditCard.setBorder(new EmptyBorder(25, 25, 25, 25));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);
-
-        // Top Row: Brand
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.EAST;
+        // Top: Brand
         JLabel vLabel = new JLabel("VPay");
         vLabel.setForeground(Color.WHITE);
         vLabel.setFont(new Font("SansSerif", Font.BOLD | Font.ITALIC, 24));
-        creditCard.add(vLabel, gbc);
+        vLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        vLabel.setBorder(new EmptyBorder(0, 0, 0, 10)); // Add padding
+        creditCard.add(vLabel, BorderLayout.NORTH);
 
-        // Middle Row: Card Number
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        gbc.weighty = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(15, 5, 15, 5);
+        // Center: Card Number
         cardNumberLabel = new JLabel("0000 0000 0000 0000");
         cardNumberLabel.setForeground(Color.WHITE);
         cardNumberLabel.setFont(new Font("Monospaced", Font.BOLD, 22));
-        creditCard.add(cardNumberLabel, gbc);
 
-        // Bottom Row: Name and Expiry
-        gbc.gridy = 2;
-        gbc.gridwidth = 1;
-        gbc.weighty = 0.0;
-        gbc.anchor = GridBagConstraints.SOUTHWEST;
+        JPanel numberPanel = new JPanel();
+        numberPanel.setLayout(new BoxLayout(numberPanel, BoxLayout.Y_AXIS));
+        numberPanel.setOpaque(false);
+        numberPanel.add(Box.createVerticalGlue());
+        numberPanel.add(cardNumberLabel);
+        numberPanel.add(Box.createVerticalGlue());
+        creditCard.add(numberPanel, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new GridLayout(2, 1));
+        // Bottom: Name and Expiry
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
         bottomPanel.setOpaque(false);
+
+        JPanel namePanel = new JPanel(new GridLayout(2, 1));
+        namePanel.setOpaque(false);
         JLabel nameTitle = new JLabel("Card Holder");
         nameTitle.setForeground(new Color(200, 200, 200));
         nameTitle.setFont(new Font("SansSerif", Font.PLAIN, 10));
-        bottomPanel.add(nameTitle);
+        namePanel.add(nameTitle);
 
         cardNameLabel = new JLabel("NAME SURNAME");
         cardNameLabel.setForeground(Color.WHITE);
         cardNameLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
-        bottomPanel.add(cardNameLabel);
+        namePanel.add(cardNameLabel);
+        bottomPanel.add(namePanel);
 
-        creditCard.add(bottomPanel, gbc);
-
-        gbc.gridx = 1;
-        gbc.anchor = GridBagConstraints.SOUTHEAST;
         JPanel expiryPanel = new JPanel(new GridLayout(2, 1));
         expiryPanel.setOpaque(false);
         JLabel expiryTitle = new JLabel("Expires");
@@ -320,8 +301,9 @@ public class OverviewPanel extends JPanel {
         cardExpiryLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
         cardExpiryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         expiryPanel.add(cardExpiryLabel);
+        bottomPanel.add(expiryPanel);
 
-        creditCard.add(expiryPanel, gbc);
+        creditCard.add(bottomPanel, BorderLayout.SOUTH);
 
         panel.add(creditCard);
         panel.add(Box.createVerticalStrut(30));
@@ -351,19 +333,27 @@ public class OverviewPanel extends JPanel {
         panel.add(Box.createVerticalStrut(30));
 
         // Spending Limit
-        JLabel limitLabel = new JLabel("Spending Limit");
-        limitLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        limitLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(limitLabel);
+        JPanel limitPanel = new JPanel();
+        limitPanel.setLayout(new BoxLayout(limitPanel, BoxLayout.Y_AXIS));
+        limitPanel.setOpaque(false);
+        limitPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        panel.add(Box.createVerticalStrut(10));
+        JLabel limitLabel = new JLabel("Spending Limit");
+        limitLabel.setFont(StyleUtils.LABEL_FONT);
+        limitLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        limitPanel.add(limitLabel);
+
+        limitPanel.add(Box.createVerticalStrut(10));
 
         limitBar = new JProgressBar();
         limitBar.setValue(0);
         limitBar.setForeground(new Color(255, 100, 100));
         limitBar.setPreferredSize(new Dimension(200, 15));
         limitBar.setMaximumSize(new Dimension(200, 15));
-        panel.add(limitBar);
+        limitBar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        limitPanel.add(limitBar);
+
+        panel.add(limitPanel);
 
         panel.add(Box.createVerticalGlue());
 

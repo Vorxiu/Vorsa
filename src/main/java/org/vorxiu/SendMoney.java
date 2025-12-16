@@ -30,7 +30,7 @@ public class SendMoney extends JPanel {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
         JLabel titleLabel = new JLabel("Transfer");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 32));
+        titleLabel.setFont(StyleUtils.HEADER_FONT); // Use consistent font
         headerPanel.add(titleLabel, BorderLayout.WEST);
 
         contentPanel.add(headerPanel, BorderLayout.NORTH);
@@ -42,118 +42,50 @@ public class SendMoney extends JPanel {
     }
 
     private JPanel createFormPanel() {
-        JPanel formContainer = new JPanel(new GridBagLayout());
-        formContainer.setOpaque(false);
-
-        JPanel card = new JPanel();
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(Color.WHITE);
-        card.setBorder(new EmptyBorder(30, 50, 30, 50));
-        // Shadow effect simulation (optional, simple border for now)
-        card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
-                new EmptyBorder(30, 50, 30, 50)));
+        JPanel cardPanel = StyleUtils.createCardPanel();
+        cardPanel.setMaximumSize(new Dimension(500, 600));
 
         // Recipient Profile
-        JLabel recipientName = new JLabel("Money transfer");
-        recipientName.setFont(new Font("SansSerif", Font.BOLD, 18));
-        recipientName.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        card.add(recipientName);
-        card.add(Box.createVerticalStrut(30));
+        cardPanel.add(StyleUtils.createHeaderLabel("Money transfer"));
+        StyleUtils.addVerticalSpace(cardPanel, 30);
 
         // Fields
-        card.add(createLabel("Amount"));
-        amountField = new JTextField("");
-        styleTextField(amountField);
-        card.add(amountField);
-        card.add(Box.createVerticalStrut(15));
+        cardPanel.add(StyleUtils.createLabel("Amount"));
+        amountField = StyleUtils.createTextField();
+        cardPanel.add(amountField);
+        StyleUtils.addVerticalSpace(cardPanel, 15);
 
-        card.add(createLabel("Recipient Username"));
-        recipientCombo = new JComboBox<>();
-        styleComboBox(recipientCombo);
-        card.add(recipientCombo);
-        card.add(Box.createVerticalStrut(15));
+        cardPanel.add(StyleUtils.createLabel("Recipient Username"));
+        recipientCombo = StyleUtils.createComboBox();
+        cardPanel.add(recipientCombo);
+        StyleUtils.addVerticalSpace(cardPanel, 15);
 
-        card.add(createLabel("Reason of payment"));
-        reasonCombo = new JComboBox<>(new String[] { "General", "Rent", "Food", "Utilities", "Other" });
-        styleComboBox(reasonCombo);
-        card.add(reasonCombo);
-        card.add(Box.createVerticalStrut(15));
+        cardPanel.add(StyleUtils.createLabel("Reason of payment"));
+        reasonCombo = StyleUtils.createComboBox();
+        reasonCombo.addItem("General");
+        reasonCombo.addItem("Rent");
+        reasonCombo.addItem("Food");
+        reasonCombo.addItem("Utilities");
+        reasonCombo.addItem("Other");
+        cardPanel.add(reasonCombo);
+        StyleUtils.addVerticalSpace(cardPanel, 15);
 
-        card.add(createLabel("Note"));
-        noteArea = new JTextArea("", 3, 20);
-        noteArea.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        noteArea.setLineWrap(true);
+        cardPanel.add(StyleUtils.createLabel("Note"));
+        noteArea = StyleUtils.createTextArea(3, 20);
         JScrollPane noteScroll = new JScrollPane(noteArea);
         noteScroll.setAlignmentX(Component.LEFT_ALIGNMENT);
         noteScroll.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
         noteScroll.setPreferredSize(new Dimension(300, 80));
-        card.add(noteScroll);
-        card.add(Box.createVerticalStrut(30));
+        cardPanel.add(noteScroll);
+        StyleUtils.addVerticalSpace(cardPanel, 30);
 
         // Process Button
-        JButton processButton = new JButton("Process");
-        processButton.setBackground(new Color(235, 40, 40)); // Red
-        processButton.setForeground(Color.WHITE);
-        processButton.setFocusPainted(false);
-        processButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        processButton.setPreferredSize(new Dimension(150, 40));
-        processButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                processTransaction();
-            }
-        });
+        JButton processButton = StyleUtils.createButton("Process");
+        processButton.setBackground(new Color(235, 40, 40)); // Red override
+        processButton.addActionListener(e -> processTransaction());
+        cardPanel.add(processButton);
 
-        // Remove default button border for cleaner look
-        processButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-
-        // Wrap button in a panel to force centering
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setOpaque(false);
-        buttonPanel.setAlignmentX(Component.LEFT_ALIGNMENT); // Align panel with other left-aligned components
-        buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); // Allow panel to stretch
-        buttonPanel.add(processButton);
-
-        card.add(buttonPanel);
-
-        // Add card to container
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.NONE; // Don't stretch the card too much
-        gbc.anchor = GridBagConstraints.CENTER;
-        formContainer.add(card, gbc);
-
-        return formContainer;
-    }
-
-    private JLabel createLabel(String text) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        label.setForeground(Color.DARK_GRAY);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return label;
-    }
-
-    private void styleTextField(JTextField field) {
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        field.setPreferredSize(new Dimension(300, 35));
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-        field.setAlignmentX(Component.LEFT_ALIGNMENT);
-    }
-
-    private void styleComboBox(JComboBox<?> box) {
-        box.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        box.setPreferredSize(new Dimension(300, 35));
-        box.setAlignmentX(Component.LEFT_ALIGNMENT);
-        box.setBackground(Color.WHITE);
-        ((JComponent) box.getRenderer()).setBorder(new EmptyBorder(5, 5, 5, 5));
+        return StyleUtils.createCenteredPanel(cardPanel);
     }
 
     public void refreshData() {

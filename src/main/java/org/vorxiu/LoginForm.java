@@ -15,74 +15,36 @@ public class LoginForm extends JPanel {
 
 	public LoginForm(Main main) {
 		this.main = main;
-		setLayout(new GridBagLayout());
-		setBackground(new Color(245, 245, 245)); // Darker white background
+		setLayout(new BorderLayout());
+		setBackground(StyleUtils.BACKGROUND_COLOR);
 
 		// Card Panel
-		JPanel cardPanel = new JPanel(new GridBagLayout());
-		cardPanel.setBackground(Color.WHITE);
-		cardPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
-				new EmptyBorder(40, 40, 40, 40)));
-
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(5, 5, 5, 5);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.gridwidth = 2;
+		JPanel cardPanel = StyleUtils.createCardPanel();
+		cardPanel.setMaximumSize(new Dimension(400, 600));
 
 		// Title
-		JLabel titleLabel = new JLabel("Vorsa");
-		titleLabel.setFont(new Font("Inter", Font.BOLD, 72));
-		titleLabel.setForeground(new Color(217, 108, 24)); // Orange color
-		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		cardPanel.add(titleLabel, gbc);
+		StyleUtils.addVerticalSpace(cardPanel, 20); // Add space before title
+		JLabel titleLabel = StyleUtils.createTitleLabel("Vorsa");
+		titleLabel.setFont(new Font("Inter", Font.BOLD, 48)); // Reduced font size slightly
+		cardPanel.add(titleLabel);
+		StyleUtils.addVerticalSpace(cardPanel, 30);
 
-		gbc.gridy++;
-		gbc.insets = new Insets(30, 5, 5, 5); // More space after title
+		// Username
+		cardPanel.add(StyleUtils.createLabel("Username"));
+		StyleUtils.addVerticalSpace(cardPanel, 5);
+		JTextField accountField = StyleUtils.createTextField();
+		cardPanel.add(accountField);
+		StyleUtils.addVerticalSpace(cardPanel, 15);
 
-		// Account No Label
-		JLabel accountLabel = new JLabel("Username");
-		accountLabel.setFont(new Font("Inter", Font.BOLD, 14));
-		cardPanel.add(accountLabel, gbc);
+		// Password
+		cardPanel.add(StyleUtils.createLabel("Password"));
+		StyleUtils.addVerticalSpace(cardPanel, 5);
+		JPasswordField passField = StyleUtils.createPasswordField();
+		cardPanel.add(passField);
+		StyleUtils.addVerticalSpace(cardPanel, 20);
 
-		gbc.gridy++;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		// Account Field
-		JTextField accountField = new JTextField(20);
-		accountField.setPreferredSize(new Dimension(300, 35));
-		accountField.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.BLACK),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-		cardPanel.add(accountField, gbc);
-
-		gbc.gridy++;
-		gbc.insets = new Insets(15, 5, 5, 5);
-		// Password Label
-		JLabel passLabel = new JLabel("Password");
-		passLabel.setFont(new Font("Inter", Font.BOLD, 14));
-		cardPanel.add(passLabel, gbc);
-
-		gbc.gridy++;
-		gbc.insets = new Insets(5, 5, 5, 5);
-		// Password Field
-		JPasswordField passField = new JPasswordField(20);
-		passField.setPreferredSize(new Dimension(300, 35));
-		passField.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.BLACK),
-				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-		cardPanel.add(passField, gbc);
-
-		gbc.gridy++;
-		gbc.insets = new Insets(20, 5, 5, 5);
 		// Login Button
-		JButton loginButton = new JButton("Login");
-		loginButton.setPreferredSize(new Dimension(300, 40));
-		loginButton.setBackground(new Color(50, 50, 50));
-		loginButton.setForeground(Color.WHITE);
-		loginButton.setFocusPainted(false);
-		loginButton.setFont(new Font("Inter", Font.PLAIN, 14));
+		JButton loginButton = StyleUtils.createButton("Login");
 		loginButton.addActionListener(e -> {
 			String username = accountField.getText();
 			String password = new String(passField.getPassword());
@@ -108,50 +70,50 @@ public class LoginForm extends JPanel {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		cardPanel.add(loginButton, gbc);
+		cardPanel.add(loginButton);
+		StyleUtils.addVerticalSpace(cardPanel, 10);
 
-		gbc.gridy++;
-		gbc.insets = new Insets(10, 5, 5, 5);
-		gbc.gridwidth = 1;
+		// Remember Me & Forgot Password
+		JPanel optionsPanel = new JPanel();
+		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.X_AXIS));
+		optionsPanel.setBackground(Color.WHITE);
+		optionsPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		// Remember Me
 		JCheckBox rememberMe = new JCheckBox("Remember me");
 		rememberMe.setBackground(Color.WHITE);
 		rememberMe.setFocusPainted(false);
-		cardPanel.add(rememberMe, gbc);
+		optionsPanel.add(rememberMe);
 
-		gbc.gridx = 1;
-		gbc.anchor = GridBagConstraints.EAST;
-		// Forgot Password
+		optionsPanel.add(Box.createHorizontalGlue());
+
 		JLabel forgotPass = new JLabel("Forgot Password");
-		forgotPass.setHorizontalAlignment(SwingConstants.RIGHT);
-		cardPanel.add(forgotPass, gbc);
+		forgotPass.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		optionsPanel.add(forgotPass);
 
-		gbc.gridx = 0;
-		gbc.gridy++;
-		gbc.gridwidth = 2;
-		gbc.anchor = GridBagConstraints.CENTER;
-		gbc.insets = new Insets(20, 5, 5, 5);
+		cardPanel.add(optionsPanel);
+		StyleUtils.addVerticalSpace(cardPanel, 20);
 
 		// Separator
 		JSeparator separator = new JSeparator();
 		separator.setForeground(Color.GRAY);
-		cardPanel.add(separator, gbc);
+		separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+		cardPanel.add(separator);
+		StyleUtils.addVerticalSpace(cardPanel, 10);
 
-		gbc.gridy++;
-		gbc.insets = new Insets(10, 5, 5, 5);
 		// Signup
 		JLabel signupLabel = new JLabel("Dont have an account signup");
 		signupLabel.setFont(new Font("Inter", Font.BOLD, 12));
+		signupLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		signupLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		signupLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, signupLabel.getPreferredSize().height));
 		signupLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		signupLabel.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				main.showScreen("Signup");
 			}
 		});
-		cardPanel.add(signupLabel, gbc);
+		cardPanel.add(signupLabel);
 
-		add(cardPanel);
+		add(StyleUtils.createCenteredPanel(cardPanel), BorderLayout.CENTER);
 	}
 }

@@ -32,20 +32,6 @@ CREATE TABLE transactions (
     type VARCHAR2(20), -- 'TRANSFER', 'PAYMENT', 'DEPOSIT'
     status VARCHAR2(20) DEFAULT 'COMPLETED' -- 'PENDING', 'COMPLETED'
 );
-
--- Insert Dummy Data
-INSERT INTO users (username, password, full_name, email) 
-VALUES ('testuser', 'password123', 'John Doe', 'john@example.com');
-
-INSERT INTO accounts (user_id, account_number, balance, savings_balance, savings_goal, spending_limit, card_number, card_expiry, card_cvv)
-VALUES (1, '427538', 10000.00, 10.00, 1000.00, 2000.00, '4000123456789010', '12/28', '123');
-
-INSERT INTO transactions (from_account_id, amount, description, type, status)
-VALUES (1, 120.50, 'Grocery Store', 'PAYMENT', 'COMPLETED');
-
-INSERT INTO transactions (to_account_id, amount, description, type, status)
-VALUES (1, 3500.00, 'Salary Deposit', 'DEPOSIT', 'COMPLETED');
-
 -- Insert Vorxiu User
 INSERT INTO users (username, password, full_name, email) 
 VALUES ('vorxiu', 'vorxiu123', 'Vorxiu User', 'vorxiu@example.com');

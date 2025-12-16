@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DB {
-    private static final String URL = "jdbc:oracle:thin:@localhost:1522/FREEPDB1";
+    private static final String URL = "jdbc:oracle:thin:@localhost:1521/FREEPDB1";
     private static final String USER = "system";
     private static final String PASS = "vorsa123";
 
